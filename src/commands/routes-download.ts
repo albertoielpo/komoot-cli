@@ -32,7 +32,7 @@ export function registerRoutesDownloadCommand(routes: Command): void {
                 const outputPath = options.output ?? `${tourId}.${format}`;
 
                 if (options.user) {
-                    // Public tour: fetch without authentication, per plan §1.
+                    // Public tour: fetch without authentication.
                     if (format === "gpx") {
                         fs.writeFileSync(outputPath, await downloadGpx(tourId));
                     } else {

@@ -12,7 +12,7 @@ interface LoginResponse {
 /**
  * Exchanges email/password for the long-lived opaque API token Komoot's own
  * clients use. The response's "password" field is that token, not the real
- * password (see plan §2).
+ * password.
  */
 export async function login(
     email: string,
