@@ -1,0 +1,39 @@
+{
+    "name": "komoot-cli",
+    "version": "1.0.0",
+    "description": "Unofficial command-line client for your Komoot account",
+    "author": "Alberto Ielpo <alberto.ielpo@gmail.com>",
+    "license": "MIT",
+    "bin": {
+        "komoot-cli": "./bin/komoot-cli.js"
+    },
+    "main": "dist/index.js",
+    "engines": {
+        "node": ">=24"
+    },
+    "files": [
+        "dist",
+        "bin"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "prepare": "npm run build",
+        "watch": "tsc --watch",
+        "test": "jest",
+        "lint": "tsc --noEmit",
+        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"package*.json\""
+    },
+    "dependencies": {
+        "@napi-rs/keyring": "^1.1.6",
+        "commander": "^12.1.0",
+        "undici": "^6.21.0"
+    },
+    "devDependencies": {
+        "@types/jest": "^29.5.14",
+        "@types/node": "^24.0.0",
+        "jest": "^29.7.0",
+        "prettier": "^3.4.2",
+        "ts-jest": "^29.2.5",
+        "typescript": "^5.7.2"
+    }
+}
