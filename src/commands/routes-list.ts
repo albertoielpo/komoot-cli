@@ -25,6 +25,10 @@ function formatDuration(seconds: number): string {
     return `${hours}h${minutes.toString().padStart(2, "0")}m`;
 }
 
+function formatElevation(meters: number): string {
+    return `${Math.round(meters)} m`;
+}
+
 export function registerRoutesListCommand(routes: Command): void {
     routes
         .command("list")
@@ -94,13 +98,13 @@ export function registerRoutesListCommand(routes: Command): void {
                 const rows = tours.map((tour) => [
                     String(tour.id),
                     tour.name,
-                    tour.sport,
+                    formatElevation(tour.elevation_up),
                     tour.status,
                     formatDistance(tour.distance),
                     formatDuration(tour.duration)
                 ]);
                 process.stdout.write(
-                    `${renderTable(["ID", "NAME", "SPORT", "STATUS", "DISTANCE", "DURATION"], rows)}\n`
+                    `${renderTable(["ID", "NAME", "ELEVATION UP", "STATUS", "DISTANCE", "DURATION"], rows)}\n`
                 );
 
                 if (result.page) {

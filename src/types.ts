@@ -52,6 +52,22 @@ export interface StoredCredentials {
     token: string;
 }
 
+export interface TourStatEntry {
+    type: string;
+    amount: number;
+}
+
+export interface TourStatsSummary {
+    surfaces?: TourStatEntry[];
+    way_types?: TourStatEntry[];
+}
+
+export interface TourDifficulty {
+    grade: string;
+    explanation_technical?: string;
+    explanation_fitness?: string;
+}
+
 export interface TourSummary {
     id: number;
     name: string;
@@ -60,6 +76,10 @@ export interface TourSummary {
     status: TourStatus;
     distance: number;
     duration: number;
+    elevation_up: number;
+    elevation_down: number;
+    summary?: TourStatsSummary;
+    difficulty?: TourDifficulty;
     date?: string;
     [key: string]: unknown;
 }
