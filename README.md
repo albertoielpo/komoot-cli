@@ -1,5 +1,7 @@
 # komoot-cli
 
+[![npm version](https://img.shields.io/npm/v/komoot-cli.svg)](https://www.npmjs.com/package/komoot-cli)
+
 An unofficial command-line client for your [Komoot](https://www.komoot.com) account: list,
 view, download, edit, delete, and upload routes ("tours") from the terminal.
 
@@ -17,7 +19,13 @@ view, download, edit, delete, and upload routes ("tours") from the terminal.
 
 ## Install
 
-From this directory:
+From [npm](https://www.npmjs.com/package/komoot-cli):
+
+```sh
+npm install -g komoot-cli
+```
+
+Or from this directory:
 
 ```sh
 npm install -g .
