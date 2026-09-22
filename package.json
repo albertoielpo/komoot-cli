@@ -1,9 +1,30 @@
 {
     "name": "komoot-cli",
-    "version": "1.0.0",
-    "description": "Unofficial command-line client for your Komoot account",
+    "version": "1.0.1",
+    "description": "Unofficial command-line client for Komoot: list, download (GPX/FIT), edit, and upload your tours and routes from the terminal.",
+    "keywords": [
+        "komoot",
+        "cli",
+        "gpx",
+        "fit",
+        "gps",
+        "route",
+        "tour",
+        "cycling",
+        "hiking",
+        "outdoor",
+        "fitness"
+    ],
     "author": "Alberto Ielpo <alberto.ielpo@gmail.com>",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/albertoielpo/komoot-cli.git"
+    },
+    "homepage": "https://github.com/albertoielpo/komoot-cli#readme",
+    "bugs": {
+        "url": "https://github.com/albertoielpo/komoot-cli/issues"
+    },
     "bin": {
         "komoot-cli": "./bin/komoot-cli.js"
     },
