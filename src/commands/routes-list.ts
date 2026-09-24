@@ -1,6 +1,13 @@
 import type { Command } from "commander";
-import { listTours } from "../api/tours";
-import { isSport, isTourType, type TourSummary } from "../types";
+import { listTours, listToursSortedById } from "../api/tours";
+import {
+    isSortDirection,
+    isSport,
+    isTourSortField,
+    isTourType,
+    TOUR_SORT_FIELDS,
+    type TourSummary
+} from "../types";
 import { optionalAuth, requireAuth } from "../util/context";
 import { CliError, runAction } from "../util/errors";
 import { renderTable } from "../util/table";
@@ -12,6 +19,8 @@ interface ListOptions {
     name?: string;
     limit?: string;
     page?: string;
+    orderby?: string;
+    order?: string;
     json?: boolean;
 }
 
@@ -42,6 +51,8 @@ export function registerRoutesListCommand(routes: Command): void {
         .option("--name <substr>", "filter by name substring")
         .option("--limit <n>", "page size", "25")
         .option("--page <n>", "page number", "0")
+        .option("--orderby <field>", `sort by ${TOUR_SORT_FIELDS.join(", ")}`)
+        .option("--order <direction>", "sort direction: asc or desc", "asc")
         .option("--json", "output raw JSON instead of a table")
         .action(
             runAction(async (options: ListOptions) => {
@@ -52,6 +63,16 @@ export function registerRoutesListCommand(routes: Command): void {
                 }
                 if (options.sport && !isSport(options.sport)) {
                     throw new CliError(`Invalid --sport "${options.sport}".`);
+                }
+                if (options.orderby && !isTourSortField(options.orderby)) {
+                    throw new CliError(
+                        `Invalid --orderby "${options.orderby}". Expected one of: ${TOUR_SORT_FIELDS.join(", ")}.`
+                    );
+                }
+                if (options.order && !isSortDirection(options.order)) {
+                    throw new CliError(
+                        `Invalid --order "${options.order}". Expected asc or desc.`
+                    );
                 }
 
                 let userId: string;
@@ -66,20 +87,20 @@ export function registerRoutesListCommand(routes: Command): void {
                     userId = auth.userId;
                 }
 
-                const result = await listTours(
-                    userId,
-                    {
-                        type: options.type as any,
-                        status,
-                        sportTypes: options.sport,
-                        name: options.name,
-                        limit: options.limit
-                            ? Number(options.limit)
-                            : undefined,
-                        page: options.page ? Number(options.page) : undefined
-                    },
-                    auth
-                );
+                const params = {
+                    type: options.type as any,
+                    status,
+                    sportTypes: options.sport,
+                    name: options.name,
+                    sortField: options.orderby,
+                    sortDirection: options.orderby ? options.order : undefined,
+                    limit: options.limit ? Number(options.limit) : undefined,
+                    page: options.page ? Number(options.page) : undefined
+                };
+                const result =
+                    options.orderby === "id"
+                        ? await listToursSortedById(userId, params, auth)
+                        : await listTours(userId, params, auth);
 
                 const tours: TourSummary[] = result._embedded?.tours ?? [];
 

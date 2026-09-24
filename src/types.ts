@@ -43,6 +43,20 @@ export type TourStatus = (typeof TOUR_STATUSES)[number];
 export const TOUR_TYPES = ["tour_planned", "tour_recorded"] as const;
 export type TourType = (typeof TOUR_TYPES)[number];
 
+// "id" is not supported by the Komoot API and is sorted client-side.
+export const TOUR_SORT_FIELDS = [
+    "name",
+    "id",
+    "date",
+    "distance",
+    "duration",
+    "elevation"
+] as const;
+export type TourSortField = (typeof TOUR_SORT_FIELDS)[number];
+
+export const SORT_DIRECTIONS = ["asc", "desc"] as const;
+export type SortDirection = (typeof SORT_DIRECTIONS)[number];
+
 export const UPLOAD_DATA_TYPES = ["gpx", "fit", "tcx"] as const;
 export type UploadDataType = (typeof UPLOAD_DATA_TYPES)[number];
 
@@ -119,6 +133,14 @@ export function isTourStatus(value: string): value is TourStatus {
 
 export function isTourType(value: string): value is TourType {
     return (TOUR_TYPES as readonly string[]).includes(value);
+}
+
+export function isTourSortField(value: string): value is TourSortField {
+    return (TOUR_SORT_FIELDS as readonly string[]).includes(value);
+}
+
+export function isSortDirection(value: string): value is SortDirection {
+    return (SORT_DIRECTIONS as readonly string[]).includes(value);
 }
 
 export function isUploadDataType(value: string): value is UploadDataType {

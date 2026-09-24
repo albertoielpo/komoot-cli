@@ -1,5 +1,11 @@
 import { MockAgent, setGlobalDispatcher } from "undici";
-import { deleteTour, editTour, getTour, listTours } from "../../src/api/tours";
+import {
+    deleteTour,
+    editTour,
+    getTour,
+    listTours,
+    listToursSortedById
+} from "../../src/api/tours";
 
 const auth = { userId: "42", token: "tok", email: "a@b.com" };
 
@@ -34,6 +40,36 @@ describe("tours API", () => {
             auth
         );
         expect(result.page?.totalPages).toBe(1);
+    });
+
+    it("sorts by id across all pages and slices the requested page", async () => {
+        const pool = mockAgent.get("https://api.komoot.de");
+        pool.intercept({
+            path: "/v007/users/42/tours/?limit=500&page=0",
+            method: "GET"
+        }).reply(200, {
+            _embedded: { tours: [{ id: 3 }, { id: 1 }] },
+            page: { number: 0, totalPages: 2 }
+        });
+        pool.intercept({
+            path: "/v007/users/42/tours/?limit=500&page=1",
+            method: "GET"
+        }).reply(200, {
+            _embedded: { tours: [{ id: 4 }, { id: 2 }, { id: 5 }] },
+            page: { number: 1, totalPages: 2 }
+        });
+
+        const result = await listToursSortedById(
+            "42",
+            { sortField: "id", sortDirection: "desc", limit: 2, page: 1 },
+            auth
+        );
+        expect(result._embedded?.tours?.map((t) => t.id)).toEqual([3, 2]);
+        expect(result.page).toEqual({
+            number: 1,
+            totalPages: 3,
+            totalElements: 5
+        });
     });
 
     it("fetches a single tour with embedded extras", async () => {

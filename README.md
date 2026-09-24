@@ -68,7 +68,9 @@ komoot-cli logout                         # clears stored credentials
 komoot-cli whoami                         # shows the currently logged-in account
 
 komoot-cli routes list [--user <id>] [--type tour_planned|tour_recorded]
-                       [--sport <type>] [--name <substr>] [--limit N] [--page N] [--json]
+                       [--sport <type>] [--name <substr>] [--limit N] [--page N]
+                       [--orderby name|id|date|distance|duration|elevation]
+                       [--order asc|desc] [--json]
 komoot-cli routes show <tour-id> [--json]
 komoot-cli routes download <tour-id> [--format gpx|fit] [--output <path>] [--user <id>]
 komoot-cli routes edit <tour-id> [--name <str>] [--sport <type>] [--status public|private|friends]
@@ -79,6 +81,10 @@ komoot-cli routes upload <file> [--sport <type>] [--name <str>] [--format gpx|fi
 --help / -h        # on the root command and every subcommand
 --version / -V     # root command only
 ```
+
+`--orderby` sorts server-side, except `id`, which Komoot's API does not support: for
+that field the CLI fetches all matching tours, sorts them locally, then applies
+`--limit`/`--page`. `--order` defaults to `asc`.
 
 `--user <id>` (a numeric Komoot user id) runs a command unauthenticated against that
 user's **public** routes — no login required. Omit it to operate on your own account,

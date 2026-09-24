@@ -6,6 +6,7 @@ import type {
     TourDetail,
     TourListResponse,
     TourStatus,
+    TourSummary,
     TourType,
     UploadDataType,
     UserProfile
@@ -48,6 +49,45 @@ export function listTours(
             }
         }
     );
+}
+
+const FETCH_ALL_PAGE_SIZE = 500;
+
+// The API cannot sort by id, so fetch every page, sort locally, and slice
+// out the requested page so pagination stays consistent across pages.
+export async function listToursSortedById(
+    userId: string,
+    params: ListToursParams,
+    auth?: StoredCredentials
+): Promise<TourListResponse> {
+    const baseParams = {
+        ...params,
+        sortField: undefined,
+        sortDirection: undefined,
+        limit: FETCH_ALL_PAGE_SIZE
+    };
+    const tours: TourSummary[] = [];
+    for (let page = 0; ; page++) {
+        const result = await listTours(userId, { ...baseParams, page }, auth);
+        tours.push(...(result._embedded?.tours ?? []));
+        if (!result.page || page + 1 >= result.page.totalPages) {
+            break;
+        }
+    }
+
+    const sign = params.sortDirection === "desc" ? -1 : 1;
+    tours.sort((a, b) => sign * (a.id - b.id));
+
+    const limit = params.limit ?? 25;
+    const page = params.page ?? 0;
+    return {
+        _embedded: { tours: tours.slice(page * limit, (page + 1) * limit) },
+        page: {
+            number: page,
+            totalPages: Math.max(1, Math.ceil(tours.length / limit)),
+            totalElements: tours.length
+        }
+    };
 }
 
 export function getTour(
