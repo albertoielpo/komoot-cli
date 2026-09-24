@@ -1,6 +1,6 @@
 {
     "name": "komoot-cli",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "Unofficial command-line client for Komoot: list, download (GPX/FIT), edit, and upload your tours and routes from the terminal.",
     "keywords": [
         "komoot",
