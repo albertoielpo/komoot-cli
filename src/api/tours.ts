@@ -159,12 +159,6 @@ export async function deleteTour(
     });
 }
 
-const UPLOAD_CONTENT_TYPES: Record<UploadDataType, string> = {
-    gpx: "application/gpx+xml",
-    fit: "application/octet-stream",
-    tcx: "application/xml"
-};
-
 export interface UploadTourParams {
     dataType: UploadDataType;
     sport?: Sport;
@@ -192,7 +186,10 @@ export async function uploadTour(
             name: params.name,
             time_in_motion: params.timeInMotion
         },
-        headers: { "Content-Type": UPLOAD_CONTENT_TYPES[params.dataType] },
+        // Komoot expects the raw file bytes regardless of format; an XML
+        // content type (e.g. application/gpx+xml) makes its server try to
+        // parse the body as XML and fail with 400 HttpMessageNotReadable.
+        headers: { "Content-Type": "application/octet-stream" },
         body: new Uint8Array(fileBuffer)
     });
     const tour = (await response.json()) as TourDetail;
